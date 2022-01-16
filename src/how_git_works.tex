@@ -1,0 +1,511 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{appendixnumberbeamer}
+\usepackage{fontawesome}
+
+\usetheme[numbering=fraction,block=fill,progressbar=frametitle]{metropolis}
+\usecolortheme{owl}
+
+\hypersetup{
+    colorlinks=false,
+    pdftitle={Introduction to Git},
+    pdfpagemode=FullScreen,
+    pdfauthor={Jaroslaw Karczmarczyk}
+}
+
+\urlstyle{same}
+\graphicspath{ {../images/} }
+
+\setbeameroption{show notes}
+\setbeamercovered{transparent}
+\setbeamertemplate{note page}[compressed]
+\setbeamerfont{note page}{size=\tiny}
+\addtobeamertemplate{note page}{\setbeamerfont{itemize/enumerate subbody}{size=\tiny}}{}
+
+\title{Introduction to \includegraphics[height=1.2ex]{git-logo-white}}
+\subtitle{How \includegraphics[height=1.2ex]{git-logo-white} works}
+\date{\today}
+\author[Jarek]{Jarosław Karczmarczyk\\\texttt{jaroslaw.karczmarczyk@pwc.com}}
+\institute{PwC Advisory spółka z ograniczoną odpowiedzialnością sp.k.\\Data \& Analytics}
+\logo{\includegraphics[scale=0.08]{pwc-logo-white}\hspace{6pt}}
+\titlegraphic{\hfill\includegraphics[scale=0.12]{pwc-logo-white}}
+\setbeamercolor{alerted text}{fg=OwlYellow}
+\setbeamercolor*{block title}{
+    use=normal text,
+    fg=normal text.fg,
+    bg=normal text.bg!80!fg
+}
+\setbeamercolor{block body}{
+    use={block title, normal text},
+    bg=block title.bg!50!normal text.bg
+}
+
+\setbeamertemplate{itemize items}[triangle]
+
+\begin{document}
+    \maketitle
+
+    \begin{frame}{Introduction}
+        Porcelain commands --- high level commands
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git status}
+            \item\texttt{git add}
+            \item\texttt{git commit}
+            \item\texttt{git branch}
+            \item\texttt{git switch} (\texttt{git checkout})
+            \item\texttt{git pull}
+            \item\texttt{...}
+        \end{itemize}
+        %\note{aa}
+    \end{frame}
+
+    \begin{frame}{Introduction}
+        Plumbing commands --- low level commands
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git cat-file}
+            \item\texttt{git hash-object}
+            \item\texttt{git count-objects}
+            \item\texttt{...}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Introduction}
+        \begin{center}
+            \onslide<1->{If you want to master \alert{Git}, don't worry\\about learning the commands.}
+
+            \onslide<2->{Instead, learn the model.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \alert{Git} is a Distributed Version Control System.
+        \end{center}
+        \pause
+        \begin{center}
+            That’s a lot of words to define \alert{Git}.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \only<1>{\alert{Git} is a Version Control System.}
+            \only<2>{\alert{Git} is a Stupid Content Tracker.}
+            \only<3>{\alert{Git} is a Persistent Map.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            \only<1>{\alert{Value} is a sequence of bytes.}
+            \only<2>{\alert{Key} is a \alert{SHA1}\footnote{\url{https://en.wikipedia.org/wiki/SHA-1}} hash.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            \begin{tabular}{@{}l@{}@{}l l@{}}
+                value: & & \texttt{test} \\
+                key:   & & \texttt{9daeafb9864cf43055ae93beb0afd6c7d144bfa4}
+            \end{tabular}
+            \\[1em]
+            \pause
+            \texttt{echo "test" | git hash-object --stdin}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            Every object in \alert{Git} has its own SHA1 hash.
+        \end{center}
+        \pause
+        \begin{center}
+            So, what if they collide?
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{A persistent map}
+        \begin{center}
+            \only<1>{\texttt{echo "test" | git hash-object --stdin -w}}
+            \only<2>{\texttt{git cat-file -t 9daeafb} (type)}
+            \only<3>{\texttt{git cat-file -p 9daeafb} (pretty print)}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Example}
+        \begin{center}
+            First commit!
+        \end{center}
+        \note[item]{Przejdz do katalogu \texttt{\textasciitilde/projects/training}}
+        \note[item]{\texttt{tree .}}
+        \note[item]{\texttt{git init}}
+        \note[item]{\texttt{l} --- pojawił się katalog \texttt{.git}}
+        \note[item]{katalog \texttt{.git/objects} jest pusty}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add main\_file.txt}}
+        \note[item]{\texttt{git add config}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git commit -m "1st commit"}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git log}}
+        \note[item]{\texttt{open .git}}
+        \note[item]{Pokaż za pomocą \texttt{git cat-file -p} zawartość commita, tree i blobs}
+        \note[item]{Zmodyfikuj \texttt{main\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add main\_file.txt}}
+        \note[item]{\texttt{git commit -m "2nd commit"}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git log}}
+        \note[item]{Pokaż za pomocą \texttt{git cat-file -p} zawartość commita --- parent}
+        \note[item]{Pożaż, jak zmieniło się tree}
+        \note[item]{\texttt{git count-objects}}
+    \end{frame}
+
+    \begin{frame}{Git objects}
+        \begin{center}
+            What about large files?
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Git objects}
+        \begin{itemize}[<+-| alert@+>]
+            \item Blobs
+            \item Trees
+            \item Commits
+            \item Annotated Tags
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Git model}
+        \begin{center}
+            \alert{D}irected \alert{A}cyclic \alert{G}raph
+            %\only<1>{\alert{D}irected \alert{A}cyclic \alert{G}raph}
+            %\only<2>{File system!}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \only<1>{\alert{Git} is a Persistent Map.}
+            \only<2>{\alert{Git} is a Stupid Content Tracker.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            List local branches\\[1em]
+            \texttt{git branch}
+        \end{center}
+        \note[item]{Katalog \texttt{refs/heads}}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            A \alert{branch} is just a reference to a commit.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            Create a new \alert{branch}\\[1em]
+            \texttt{git branch <branch name>}
+        \end{center}
+        \note[item]{Komenda \texttt{git branch second}}
+        \note[item]{Komenda \texttt{git branch}}
+        \note[item]{Jeden oznaczony gwiazdką. Co to znaczy?}
+        \note[item]{\texttt{open .git} --- plik \texttt{HEAD}}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            \only<1>{\alert{HEAD} --- current branch}
+            \only<2>{\alert{HEAD} is just a reference to a branch.}
+        \end{center}
+        \note[item]{Zmodyfikuj plik \texttt{config/new\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git commit -m "3rd commit"}}
+        \note[item]{\texttt{git log}}
+        \note[item]{Podsumowanie, na co wskazują branche i HEAD}
+        \note[item]{\texttt{git switch second}}
+        \note[item]{Wspomij o \texttt{git checkout}}
+        \note[item]{Gdzie teraz wskazuje \texttt{HEAD}}
+        \note[item]{Pokaż zawartość pliku \texttt{config/new\_file.txt}}
+        \note[item]{Zmodyfikuj plik \texttt{config/new\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git commit -m "4th commit"}}
+        \note[item]{\texttt{git log}}
+        \note[item]{\texttt{git switch master}}
+    \end{frame}
+
+    \begin{frame}{Merge}
+        \begin{center}
+            Merging.
+        \end{center}
+        \note[item]{\texttt{git switch master}}
+        \note[item]{\texttt{git merge second}}
+        \note[item]{Konflikt!}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{vim config/new\_file.txt}}
+        \note[item]{Rozwiąż konflikt}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add config/new\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git commit}}
+        \note[item]{\texttt{git log}}
+        \note[item]{\texttt{git cat-file -p} (top commit)}
+        \note[item]{Dwóch przodków}
+    \end{frame}
+
+    \begin{frame}{References}
+        \begin{center}
+            \alert{References} between commits are used to track history.\\
+            \pause
+            All the other \alert{references} are used to track content.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{References}
+        \begin{center}
+            When you move to another commit (switch to another branch), \alert{Git} doesn't care about history.\\[1em]
+            \pause
+            It just cares about trees and blobs.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Git model}
+        \begin{center}
+            \only<1>{\alert{Git's} content management is simpler than it looks.}
+            \only<2>{\alert{Git} (mostly) doesn't care about your working directory.}
+            \only<3>{Now we can forget about trees and blobs  \faSmileO.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Merge}
+        \begin{center}
+            \only<1>{Merging without merging.}
+            \only<2>{\alert{Fast-forward} merge.}
+        \end{center}
+        \note[item]{\texttt{git switch second}}
+        \note[item]{\texttt{git merge master}}
+        \note[item]{\texttt{Nie ma nowego merge commita}}
+    \end{frame}
+
+    \begin{frame}{Detached head}
+        \begin{center}
+            \only<1>{Checkout the commit.}
+        \end{center}
+        \note[item]{\texttt{git switch master}}
+        \note[item]{\texttt{git checkout ...}}
+        \note[item]{\texttt{cat .git/HEAD}}
+        \note[item]{Pokazuje na commit, a nie na branch}
+        \note[item]{\texttt{git branch}}
+        \note[item]{Zmodyfikuj plik \texttt{config/new\_file.txt}}
+        \note[item]{\texttt{git add config}}
+        \note[item]{\texttt{git commit -m "5th commit"}}
+        \note[item]{\texttt{git switch master}}
+        \note[item]{\texttt{git log}}
+        \note[item]{Gdzie ten commit?}
+    \end{frame}
+
+    \begin{frame}{Three rules}
+        \begin{center}
+            \onslide<1->{The current branch tracks new commits.}
+
+            \onslide<2->{When you move to another commit,\\\alert{Git} updates your working directory.}
+
+            \onslide<3->{Unraechable objects are garbage collected.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Rebase}
+        \begin{center}
+            How \alert{rebase} works?
+        \end{center}
+        \note[item]{Przygotuj branch three i dwa nowe commity}
+        \note[item]{Na branch master również przygotuj dwa commity}
+        \note[item]{\texttt{git switch three}}
+        \note[item]{\texttt{git rebase master}}
+        \note[item]{\texttt{git switch master}}
+        \note[item]{\texttt{git rebase three}}
+    \end{frame}
+
+    \begin{frame}{Rebase}
+        \begin{center}
+            \only<1>{Commits have different hashes. Why?}
+            \only<2>{\alert{Git} garbage-collects unreachable objects.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Merge vs Rebase}
+        \begin{center}
+            \only<1>{\alert{Merges} preserve history.}
+            \only<2>{\alert{Rebases} refactor history.}
+            \only<3>{When in doubt, just merge.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Tags}
+        \begin{center}
+            \only<1>{A \alert{tag} is a label for a commit.}
+        \end{center}
+        \note[item]{\texttt{git tag v0.1.0}}
+        \note[item]{\texttt{git tag v0.1.0 -a -m "New version"}}
+        \note[item]{\texttt{git tag}}
+        \note[item]{\texttt{git checkout v0.1.0}}
+        \note[item]{\texttt{open .git/refs/tags}}
+        \note[item]{\texttt{git cat-file -t ...}}
+        \note[item]{\texttt{git cat-file -p ...}}
+    \end{frame}
+
+    \begin{frame}{Tags}
+        \begin{center}
+            \only<1>{\alert{Annotated} tags and \alert{"Lightweight"} tags.}
+            \only<2>{A \alert{tag} is like a branch that doesn't move.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \alert{Git} is a Version Control System.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Repository}
+        \begin{center}
+            Multiple repos.
+        \end{center}
+        \note[item]{Repo on GitHub}
+        \note[item]{\texttt{git clone ...}}
+        \note[item]{Tylko jeden lokalny branch}
+    \end{frame}
+
+    \begin{frame}{Repository}
+        \begin{center}
+            We have two clones of the repository.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Repository}
+        \begin{center}
+            \alert{Local} and \alert{remote} repositories.
+        \end{center}
+        \note[item]{\texttt{vim .git/config}}
+        \note[item]{Ważna sekcja \texttt{remote}}
+        \note[item]{Domyślny remote: \texttt{origin}}
+        \note[item]{\texttt{git branch}}
+        \note[item]{\texttt{git branch --all}}
+        \note[item]{\texttt{open .git/refs/remotes}}
+        \note[item]{Jest \texttt{HEAD}, a nie ma branchy}
+        \note[item]{\texttt{packed-refs}}
+    \end{frame}
+
+    \begin{frame}{Repository}
+        \begin{center}
+            Like a local branch, a \alert{remote branch} is just a reference to a commit.
+        \end{center}
+        \note[item]{\texttt{git show-ref master}}
+        \note[item]{\texttt{git show-ref second}}
+    \end{frame}
+
+    \begin{frame}{Repository}
+        \begin{center}
+            Synchronizing repositories.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and hashes}
+        \begin{center}
+            \begin{tabular}{@{}l@{}@{}l l@{}}
+                value: & & \texttt{test} \\
+                key:   & & \texttt{9daeafb9864cf43055ae93beb0afd6c7d144bfa4}
+            \end{tabular}
+        \end{center}
+        \note[item]{Obiekty są niezmienne i unikalne.}
+    \end{frame}
+
+    \begin{frame}{Synchronizing repositories}
+        \begin{center}
+            Push commits.
+        \end{center}
+        \note[item]{Najpierw git pobrał wszystkie obiekty z repozytorium zdalnego.}
+        \note[item]{Teraz git musi wysłać nowe obiekty.}
+        \note[item]{Zmodyfikuj \texttt{main\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add main\_file.txt}}
+        \note[item]{\texttt{git commit -m "4th commit"}}
+        \note[item]{\texttt{git show-ref master}}
+        \note[item]{\texttt{git push}}
+        \note[item]{\texttt{git show-ref master}}
+        \note[item]{Czasem potrzebny najpierw \texttt{git fetch} i \texttt{git merge}, czyli razem \texttt{git pull}}
+    \end{frame}
+
+    \begin{frame}{Synchronizing repositories}
+        \begin{center}
+            \only<1>{You \alert{fetch} and \alert{merge}, then you \alert{push}.}
+            \only<2>{You \alert{pull}, then you \alert{push}.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Synchronizing repositories}
+        \begin{center}
+            \only<1>{Rebase revisited.}
+            \only<2>{Never rebase shared commits.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \alert{Git} is a Distributed Version Control System.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}[standout]
+        Thank you! \faSmileO
+    \end{frame}
+
+    \appendix
+
+    \begin{frame}{Z shell (Zsh)}
+        \begin{itemize}
+            \item\href{https://en.wikipedia.org/wiki/Z\_shell}{Z shell}
+            \begin{itemize}
+                \item\href{https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH}{Installing}
+            \end{itemize}
+            \item\href{https://ohmyz.sh}{Oh My Zsh}
+            \begin{itemize}
+                \item\href{https://ohmyz.sh/\#install}{Installing}
+                \item\href{https://github.com/ohmyzsh/ohmyzsh/wiki/Themes}{Themes} (\href{https://github.com/romkatv/powerlevel10k\#installation}{Powerlevel10k})
+                \item Plugins
+                \begin{itemize}
+                    \item\href{https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md}{Syntax highlighting}
+                    \item\href{https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md\#oh-my-zsh}{Autosuggestions}
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}[fragile]{My Git config}
+        \begin{verbatim}
+
+    user.name=Jaroslaw Karczmarczyk
+    user.email=jaroslaw.karczmarczyk@pwc.com
+    help.autocorrect=1
+    diff.algorithm=histogram
+    core.pager=less -RFX
+    core.editor=vim
+        \end{verbatim}
+    \end{frame}
+
+    \begin{frame}[fragile]{My Git config}
+        \begin{verbatim}
+
+    core.abbrev=7
+    core.autocrlf=input
+    core.filemode=true
+    pull.rebase=true
+    merge.conflictstyle=diff3
+    color.ui=auto
+        \end{verbatim}
+    \end{frame}
+\end{document}

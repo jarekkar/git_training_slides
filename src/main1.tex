@@ -1,0 +1,492 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{appendixnumberbeamer}
+
+\usetheme[numbering=fraction,block=fill]{metropolis}
+\usecolortheme{owl}
+
+\hypersetup{
+    colorlinks=false,
+    pdftitle={Introduction to Git},
+    pdfpagemode=FullScreen,
+    pdfauthor={Jaroslaw Karczmarczyk}
+}
+
+\urlstyle{same}
+\graphicspath{ {../images/} }
+
+\setbeameroption{show notes on second screen=right}
+\setbeamertemplate{note page}[plain]
+\setbeamerfont{note page}{size=\tiny}
+\addtobeamertemplate{note page}{\setbeamerfont{itemize/enumerate subbody}{size=\tiny}}{}
+
+\title{Introduction to \includegraphics[height=1.2ex]{git-logo-white}}
+\date{\today}
+\author[Jarek]{Jarosław Karczmarczyk\\\texttt{jaroslaw.karczmarczyk@pwc.com}}
+\institute{PwC Advisory spółka z ograniczoną odpowiedzialnością sp.k.\\Data \& Analytics}
+\logo{\includegraphics[scale=0.08]{pwc-logo-white}}
+\titlegraphic{\hfill\includegraphics[scale=0.12]{pwc-logo-white}}
+\setbeamercolor{alerted text}{fg=OwlYellow}
+\setbeamercolor*{block title}{
+    use=normal text,
+    fg=normal text.fg,
+    bg=normal text.bg!80!fg
+}
+\setbeamercolor{block body}{
+    use={block title, normal text},
+    bg=block title.bg!50!normal text.bg
+}
+
+\setbeamertemplate{itemize items}[triangle]
+\begin{document}
+    \maketitle
+
+
+%    \begin{frame}{Introduction}
+%        \begin{block}{What is Git?}
+%            \alert{Git} is an Open Source Distributed Version Control System.
+%        \end{block}
+%        \pause
+%        That’s a lot of words to define Git.
+%    \end{frame}
+%
+%    \begin{frame}{Introduction}
+%        \begin{block}{Control System}
+%            This basically means that \alert{Git} is a \alert{content tracker}.
+%            So \alert{Git} can be used to store content --- it is mostly used to store code due to the other features it provides.
+%        \end{block}
+%    \end{frame}
+%
+%    \begin{frame}{Introduction}
+%        \begin{block}{Version Control System}
+%            The code which is stored in \alert{Git} keeps changing as more code is added.
+%            Also, many developers can add code in parallel.
+%            So \alert{Version Control System} helps in handling this by maintaining a history of what changes have happened.
+%            Also, \alert{Git} provides features like branches and merges.
+%        \end{block}
+%    \end{frame}
+%
+%    \begin{frame}{Introduction}
+%        \begin{block}{Distributed Version Control System}
+%            \alert{Git} has a remote repository which is stored in a server and a local repository which is stored in the computer of each developer.
+%            This means that the code is not just stored in a central server, but the full copy of the code is present in all the developers’ computers. \alert{Git} is a \alert{Distributed Version Control System} since the code is present in every developer’s computer.
+%        \end{block}
+%    \end{frame}
+
+    \begin{frame}{Introduction}
+        Porcalain commands --- high level commands
+        \begin{itemize}
+            \item\texttt{git status}
+            \item\texttt{git add}
+            \item\texttt{git commit}
+            \item\texttt{git push}
+            \item\texttt{git pull}
+            \item\texttt{git branch}
+            \item\texttt{git switch} (\texttt{git checkout})
+            \item\texttt{git merge}
+            \item\texttt{git rebase}
+            \item\texttt{git pull}
+            \item\texttt{git push}
+            \item\texttt{...}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Introduction}
+        Plumbing commands --- low level commands
+        \begin{itemize}
+            \item\texttt{git cat-file}
+            \item\texttt{git hash-object}
+            \item\texttt{git count-objects}
+            \item\texttt{...}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Introduction}
+        \begin{center}
+            If you want to master \alert{Git}, don't worry\\about learning the commands.
+        \end{center}
+        \pause
+        \begin{center}
+            Instead, learn the model.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \alert{Git} is a Distributed Version Control System.
+        \end{center}
+        \pause
+        \begin{center}
+            That’s a lot of words to define Git.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \only<1>{\alert{Git} is a Version Control System.}
+            \only<2>{\alert{Git} is a Stupid Content Tracker.}
+            \only<3>{\alert{Git} is a Persistent Map.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            \only<1>{Value is a sequence on bytes.}
+            \only<2>{Key is a SHA1\footnote{\href{https://en.wikipedia.org/wiki/SHA-1}{https://en.wikipedia.org/wiki/SHA-1}} hash.}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            \begin{tabular}{ l l }
+                value:& test\\
+                key:& \texttt{9daeafb9864cf43055ae93beb0afd6c7d144bfa4}\\
+                \\
+            \end{tabular}
+            \pause
+            \texttt{echo "test" | git hash-object --stdin}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Values and keys}
+        \begin{center}
+            Every object in \alert{Git} has its own SHA1 hash.
+        \end{center}
+        \pause
+        \begin{center}
+            So, what if they collide?
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{A persistent map}
+        \begin{center}
+            \only<1>{\texttt{echo "test" | git hash-object --stdin -w}}
+            \only<2>{\texttt{git cat-file -t 9daeafb9864cf43055ae93beb0afd6c7d144bfa4} (type)}
+            \only<3>{\texttt{git cat-file -p 9daeafb9864cf43055ae93beb0afd6c7d144bfa4} (pretty print)}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Example}
+        \begin{center}
+            First commit!
+        \end{center}
+        \note[item]{Przejdz do katalogu \texttt{\textasciitilde/projects/training}}
+        \note[item]{\texttt{tree .}}
+        \note[item]{\texttt{git init}}
+        \note[item]{\texttt{l} --- katolog \texttt{.git}}
+        \note[item]{katalog \texttt{.git/objects} jest pusty}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add main\_file.txt}}
+        \note[item]{\texttt{git add config}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git commit}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git log}}
+        \note[item]{\texttt{open .git}}
+        \note[item]{Pokaż za pomoca \texttt{git cat-file -p} zawartość commita, tree i blobs}
+        \note[item]{Zmodyfikuj \texttt{main\_file.txt}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git add main\_file.txt}}
+        \note[item]{\texttt{git commit -m "Second commit"}}
+        \note[item]{\texttt{git status}}
+        \note[item]{\texttt{git log}}
+        \note[item]{Pokaż za pomoca \texttt{git cat-file -p} zawartość commita --- parent}
+        \note[item]{Pożaż, jak zmieniło się tree}
+    \end{frame}
+
+    \begin{frame}{Git objects}
+        \begin{itemize}[<+-| alert@+>]
+            \item Blobs
+            \item Trees
+            \item Commits
+            \item Annotated Tags
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Git model}
+        \begin{center}
+            \only<1>{\alert{D}irected \alert{A}cyclic \alert{G}raph}
+            \only<2>{File system!}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{What is Git?}
+        \begin{center}
+            \only<1>{\alert{Git} is a Persistent Map.}
+            \only<2>{\alert{Git} is a Stupid Content Tracker.}
+        \end{center}
+    \end{frame}
+
+    \setbeamercovered{transparent}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            List local branches\\[1em]
+            \texttt{git branch}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            A branch is just a reference to a commit.
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            Create a new branch\\[1em]
+            \texttt{git branch \textsl{<branch name>}}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{center}
+            \only<1>{\alert{HEAD} --- current branch}
+            \only<2>{\alert{HEAD} is just a reference to a branch}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Git areas}
+        \begin{itemize}[<+-| alert@+>]
+            \item Working Area
+            \item Index
+            \begin{itemize}
+                \item<2-> \texttt{git diff}
+                \item<2-> \texttt{git diff --cached}
+            \end{itemize}
+            \item Repository
+            \item Stash
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Two fundametal questions about commands}
+        \begin{itemize}[<+->]
+            \item Jak komenda przesuwa informacje w 4 przestrzeniach?
+            \item Jak komenda zmienia repozytorium?
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Example}
+        \begin{itemize}[<+-| alert@+>]
+            \item Zmiana w pliku (WA)
+            \item git add (index) (-p) (-i)
+            \item git commit (repo)
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Checkout}
+        \begin{enumerate}[<+-| alert@+>]
+            \item git checkout
+            \item przesuwa head i branch
+            \item kopiuje dane z repo do indexu i wa
+        \end{enumerate}
+    \end{frame}
+
+    \begin{frame}{Remove file}
+        \begin{center}
+            \texttt{git rm <path>}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Rename file}
+        \begin{center}
+            TODO
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Reset}
+        trzeba wiedziec o 3 areas i jak dzialaja branche
+
+        reset robi rozne rzeczy w roznych kontekstach
+
+        komendy ktore poruszaja branche: commit merge rebase pull
+        \begin{enumerate}[<+-| alert@+>]
+            \item\texttt{git reset --soft} --- soft przesuwa branch
+            \item\texttt{git reset --mixed} --- przesuwa branch, kopiuje dane do indexu
+            \item\texttt{git reset --hard} --- przesuwa branch, kopiuje dane do indexu i wa
+        \end{enumerate}
+    \end{frame}
+
+    \begin{frame}{Stash}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git stash save}
+            \item\texttt{git stash}
+            \item\texttt{git stash --keep-index --include-untracked (-ku)}
+            \item\texttt{git stash apply}
+            \item\texttt{git stash clear}
+            \item\texttt{git stash pop}
+            \item\texttt{git stash list}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Log}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git log}
+            \item\texttt{git log --graph}
+            \item\texttt{git log --decoreate}
+            \item\texttt{git log --oneline}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Show}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git show} (hash,HEAD,HEAD\textasciicircum --- parent commit,branch)
+            \item\texttt{git show HEAD~2\textasciicircum2} --- second parent
+            \item\texttt{git show HEAD@\{"1 month ago"\}} --- second parent
+            \item\texttt{git show --no-patch}
+            \item\texttt{git show --stat}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Blame}
+        \begin{center}
+            \texttt{git blame}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Show}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git diff HEAD HEAD\textasciitilde2}
+            \item\texttt{git diff master new}
+            \item\texttt{git diff --word-diff}
+            \item\texttt{--unified=10 (3)}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Log}
+        \begin{center}
+            \begin{itemize}[<+-| alert@+>]
+                \item\texttt{git log}
+                \item\texttt{git log --follow <filename>}
+                \item\texttt{git log --grep apples --oneline}
+                \item\texttt{git log -Gapples -p}  (dadanie albo usuniecie albo modyfikacja) --- regex
+                \item\texttt{git log -Sapples} (dadanie albo usuniecie) --- string
+                \item\texttt{git log -3 --oneline}
+                \item\texttt{git log HEAD\textasciitilde5..HEAD\textasciicircum{} --oneline}
+                \item\texttt{git log master..new --oneline}
+            \end{itemize}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Log}
+        \begin{center}
+            \texttt{git log --format="\%h | \%d \%s (\%cr) [\%an]"}
+        \end{center}
+
+        \pause
+        \texttt{\%h} --- abbreviated commit hash
+
+        \texttt{\%d} --- ref names
+
+        \texttt{\%s} --- subject
+
+        \texttt{\%b} --- body
+
+        \texttt{\%cr} --- committer date, relative
+
+        \texttt{\%an} --- author name
+    \end{frame}
+
+    \begin{frame}{Log format}
+        \only<1>{\texttt{git log --format="\%Cred\%h\%Creset | \%C(yellow)\%d\%Creset \%s \%Cgreen(\%cr)\%Creset \%C(cyan)[\%an]\%Creset"}}
+
+        \only<2>{\texttt{git log --format="\%Cred\%h\%Creset | \%C(yellow)\%d\%Creset \%s \%Cgreen(\%cr)\%Creset \%C(cyan)[\%an]\%Creset" --graph --all}}
+    \end{frame}
+
+    \begin{frame}{Commit}
+        \texttt{git commit --amend (-C HEAD)}
+    \end{frame}
+
+    \begin{frame}{Commit}
+        \texttt{git rebase -i HEAD\textasciitilde5}
+    \end{frame}
+
+    \begin{frame}{Branch}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git branch}
+            \item\texttt{git branch <name>}
+            \item\texttt{git branch -a}
+            \item\texttt{git branch -d <name>}
+            \item\texttt{git branch -D <name>}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Reflog}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git reflog}
+            \item\texttt{git reflog refs/heads/master}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Revert commit}
+        \texttt{git revert <hash>} (uwaga na revert merge commit)
+    \end{frame}
+
+    \begin{frame}{Config}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git config}
+            \item\texttt{git config --global alias.st status}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Config}
+        \begin{itemize}[<+-| alert@+>]
+            \item\texttt{git remote}
+            \item\texttt{git remote -v}
+            \item\texttt{git remote add <name> <url>}
+            \item\texttt{git remote rename <old> <new>}
+            \item\texttt{git remote rm <name>}
+            \item\texttt{git remote show <name>}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Pull}
+        \begin{center}
+            \texttt{git pull <name>}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Push}
+        \begin{center}
+            \texttt{git push}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Merge}
+        \begin{center}
+            \texttt{git merge} (conflict git add; git commit)
+        \end{center}
+    \end{frame}
+
+    \begin{frame}{Push}
+        \begin{center}
+            \texttt{git show-ref master}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}[standout]
+        Thank you!
+    \end{frame}
+
+    \appendix
+
+    \begin{frame}{Z shell (Zsh)}
+        \begin{itemize}
+            \item\href{https://en.wikipedia.org/wiki/Z_shell}{Z shell}
+            \begin{itemize}
+                \item\href{https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH}{Installing}
+            \end{itemize}
+            \item\href{https://ohmyz.sh/}{Oh My Zsh}
+            \begin{itemize}
+                \item\href{https://ohmyz.sh/\#install}{Installing}
+                \item\href{https://github.com/ohmyzsh/ohmyzsh/wiki/Themes}{Themes}
+                \item Plugins
+                \begin{itemize}
+                    \item\href{https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md}{Syntax highlighting}
+                    \item\href{https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md\#oh-my-zsh}{Autosuggestions}
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+\end{document}
